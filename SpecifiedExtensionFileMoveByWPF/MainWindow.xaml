@@ -5,8 +5,42 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpecifiedExtensionFileMoveByWPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        Title="SEFM" Height="600" Width="900
+        ">
+    <Grid AllowDrop="True">
+        <Label x:Name="label" Content="フォルダ一覧" HorizontalAlignment="Left" Margin="50,20,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label1" Content="ピックアップファイル一覧" HorizontalAlignment="Left" Margin="500,20,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="SubFolderCheckBox" Content="サブフォルダーも含めてピックアップする" HorizontalAlignment="Left" Margin="50,355,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
+        <Label x:Name="label2" Content="ピックアップ対象拡張子" HorizontalAlignment="Left" Margin="50,400,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="AviCheckBox" Content="avi" HorizontalAlignment="Left" Margin="50,430,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
+        <CheckBox x:Name="MkvCheckBox" Content="mkv" HorizontalAlignment="Left" Margin="100,430,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
+        <CheckBox x:Name="Mp4CheckBox" Content="mp4" HorizontalAlignment="Left" Margin="150,430,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
+        <CheckBox x:Name="WmvCheckBox" Content="wmv" HorizontalAlignment="Left" Margin="200,430,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
+        <CheckBox x:Name="JpgCheckBox" Content="jpg" HorizontalAlignment="Left" Margin="50,460,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
+        <CheckBox x:Name="PngCheckBox" Content="png" HorizontalAlignment="Left" Margin="100,460,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
+        <CheckBox x:Name="ZipCheckBox" Content="zip" HorizontalAlignment="Left" Margin="50,490
+                  ,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
+        <TextBox x:Name="SpecifiedTextBox" HorizontalAlignment="Left" Height="23" Margin="100,490,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" LostFocus="SpecifiedTextBox_LostFocus"/>
+        <Label x:Name="label3" Content="保存先フォルダ" HorizontalAlignment="Left" Margin="500,400,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="DeleteFolderCheckBox" Content="元フォルダ削除" HorizontalAlignment="Left" Margin="500,490,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="CopyCheckBox" Content="コピー" HorizontalAlignment="Left" Margin="650,490,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="ExecButton" Content="実行" HorizontalAlignment="Left" Margin="780,490,0,0" VerticalAlignment="Top" Width="50" Click="ExecButton_Click"/>
+        <Button x:Name="SelectButton" Content="選択" HorizontalAlignment="Left" Margin="780,430,0,0" VerticalAlignment="Top" Width="50" Click="SelectButton_Click"/>
+        <TextBox x:Name="SavedFolderPathLabel" HorizontalAlignment="Left" Height="20" Margin="500,430,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250"/>
+        <ListView x:Name="FoldersListView" HorizontalAlignment="Left" Height="300" Margin="50,50,0,0" VerticalAlignment="Top" Width="350" DragOver="FoldersListView_DragOver" Drop="FoldersListView_Drop">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ListView x:Name="PickupListView" HorizontalAlignment="Left" Height="300" Margin="500,50,0,0" VerticalAlignment="Top" Width="350">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
     </Grid>
 </Window>
