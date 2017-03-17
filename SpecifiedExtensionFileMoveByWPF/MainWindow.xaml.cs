@@ -11,7 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+//using System.Windows.Shapes;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.IO;
 
 namespace SpecifiedExtensionFileMoveByWPF
 {
@@ -54,13 +56,17 @@ namespace SpecifiedExtensionFileMoveByWPF
         }
 
         /// <summary>
-        /// ドラッグが重なった際の表示アイコン変更
+        /// ドラッグされた際の事前処理
         /// </summary>
         /// <param name="sender">イベント発生元オブジェクト</param>
         /// <param name="e">イベントルーティング情報</param>
-        private void FoldersListView_DragOver(object sender, DragEventArgs e)
+        private void FoldersListView_PreviewDragOver(object sender, DragEventArgs e)
         {
-            e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Link;
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, true))
+                e.Effects = DragDropEffects.Copy;
+            else
+                e.Effects = DragDropEffects.None;
+            e.Handled = true;
         }
 
         /// <summary>
@@ -70,30 +76,25 @@ namespace SpecifiedExtensionFileMoveByWPF
         /// <param name="e">イベントルーティング情報</param>
         private void FoldersListView_Drop(object sender, DragEventArgs e)
         {
-            if (e.DataView.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.StorageItems))
+            var folderPaths = new List<string>();
+            string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (files != null)
             {
-                // フォルダのパス一覧を取得する(ファイルは除外)
-                var items = await e.DataView.GetStorageItemsAsync();
-
-                var folderPaths = new List<string>();
-                foreach (var item in items)
-                {
-                    if (item is Windows.Storage.IStorageFolder)
+                foreach (var s in files)
+                    if (Directory.Exists(s))
                     {
-                        folderPaths.Add(item.Path);
+                        folderPaths.Add(s);
                     }
-                }
-                FoldersListView.ItemsSource = folderPaths;
-                SetPickupListView(folderPaths.ToArray());
             }
-
+            FoldersListView.ItemsSource = folderPaths;
+            SetPickupListView(folderPaths);
         }
 
         /// <summary>
         /// PickupListViewにファイルパスをセットする
         /// </summary>
         /// <param name="folderPaths">フォルダパスリスト</param>
-        private void SetPickupListView(string[] folderPaths)
+        private void SetPickupListView(List<string> folderPaths)
         {
             // フォルダパスリストが存在するかチェック
             if (folderPaths == null) { return; }
@@ -102,17 +103,26 @@ namespace SpecifiedExtensionFileMoveByWPF
             List<string> patterns = GetPatternFromExtensions();
 
             // searchOption オプション [ AllDirectories…サブフォルダーも検索する / TopDirectoryOnly…直下のフォルダのみ検索する ]
-            var searchOption = (bool)SubFoldercheckBox.IsChecked ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            var searchOption = (bool)SubFolderCheckBox.IsChecked ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
             // フォルダを展開する
             foreach (string path in folderPaths)
             {
-                var files = Directory.EnumerateFiles(path, "*.*", searchOption);
-                var filteringFile = files.Where(file => patterns.Any(pattern => file.ToLower().EndsWith(pattern))).ToArray();
-
-                foreach (string filePath in filteringFile)
+                try
                 {
-                    fileList.Add(filePath);
+                    var files = Directory.EnumerateFiles(path, "*.*", searchOption);
+                    var filteringFile = files.Where(file => patterns.Any(pattern => file.ToLower().EndsWith(pattern))).ToArray();
+
+                    foreach (string filePath in filteringFile)
+                    {
+                        fileList.Add(filePath);
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("フォルダ一覧に指定されている一部のフォルダが見つかりません。\nフォルダ一覧をクリアします。", "保存先フォルダ存在確認", MessageBoxButton.OK, MessageBoxImage.Error);
+                    FoldersListView.ItemsSource = null;
+                    return;
                 }
             }
             // ファイル一覧を格納
@@ -169,7 +179,7 @@ namespace SpecifiedExtensionFileMoveByWPF
         /// <param name="e">イベントルーティング情報</param>
         private void ExtensionCheckBoxes_Click(object sender, RoutedEventArgs e)
         {
-            SetPickupListView((string[])FoldersListView.ItemsSource);
+            SetPickupListView((List<string>)FoldersListView.ItemsSource);
         }
 
         /// <summary>
@@ -180,7 +190,7 @@ namespace SpecifiedExtensionFileMoveByWPF
         private void SpecifiedTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             // HACK: 変更の有無をチェックして処理させることが望ましい
-            SetPickupListView((string[])FoldersListView.ItemsSource);
+            SetPickupListView((List<string>)FoldersListView.ItemsSource);
         }
 
         /// <summary>
@@ -193,21 +203,21 @@ namespace SpecifiedExtensionFileMoveByWPF
             // 保存先フォルダ指定確認
             if (SavedFolderPathLabel.Text == string.Empty)
             {
-                await new Windows.UI.Popups.MessageDialog("保存先フォルダが指定されていません。", "保存先フォルダ存在確認").ShowAsync();
+                MessageBox.Show("保存先フォルダが指定されていません。", "保存先フォルダ存在確認", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             // 保存先フォルダ存在確認
             if (!Directory.Exists(SavedFolderPathLabel.Text))
             {
-                await new Windows.UI.Popups.MessageDialog("指定された保存先フォルダが存在しません。", "保存先フォルダ存在確認").ShowAsync();
+                MessageBox.Show("指定された保存先フォルダが存在しません。", "保存先フォルダ存在確認", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             // ピックアップファイル指定確認
             if (PickupListView.Items.Count < 1)
             {
-                await new Windows.UI.Popups.MessageDialog("ピックアップファイルが指定されていません。", "ファイル指定確認").ShowAsync();
+                MessageBox.Show("ピックアップファイルが指定されていません。", "ファイル指定確認", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -216,21 +226,19 @@ namespace SpecifiedExtensionFileMoveByWPF
             {
                 if (!File.Exists(item.ToString()))
                 {
-                    await new Windows.UI.Popups.MessageDialog("存在しないファイルがあります。", "ファイル存在確認").ShowAsync();
+                    MessageBox.Show("存在しないファイルがあります。", "ファイル存在確認", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
             }
 
-            // 確認ダイアログ
-            var msg = new Windows.UI.Popups.MessageDialog("処理を継続します", "継続確認");
-            msg.Commands.Add(new Windows.UI.Popups.UICommand("継続"));
-            msg.Commands.Add(new Windows.UI.Popups.UICommand("キャンセル"));
-
-            var res = await msg.ShowAsync();
-
             try
             {
-                if (res.Label == "継続")
+                // 確認ダイアログ
+                if (MessageBox.Show("処理を継続します。", "継続確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No)
+                {
+                    return;
+                }
+                else
                 {
                     try
                     {
@@ -250,7 +258,7 @@ namespace SpecifiedExtensionFileMoveByWPF
                     }
                     catch
                     {
-                        await new Windows.UI.Popups.MessageDialog("ファイル移動に失敗しました。\n既にファイルが存在していないか、ファイルがロックされていないか確認してください。", "例外").ShowAsync();
+                        MessageBox.Show("ファイル移動に失敗しました。\n既にファイルが存在していないか、ファイルがロックされていないか確認してください。。", "例外", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
 
@@ -265,21 +273,16 @@ namespace SpecifiedExtensionFileMoveByWPF
                         }
                         catch
                         {
-                            await new Windows.UI.Popups.MessageDialog("フォルダ削除に失敗しました。\nファイルがロックされていないか確認してください。", "例外").ShowAsync();
+                            MessageBox.Show("フォルダ削除に失敗しました。\nファイルがロックされていないか確認してください。", "例外", MessageBoxButton.OK, MessageBoxImage.Error);
                             return;
                         }
                     }
-                    await new Windows.UI.Popups.MessageDialog("完了しました。", "実行結果").ShowAsync();
-                }
-                else
-                {
-                    await new Windows.UI.Popups.MessageDialog("処理を中断しました。", "キャンセル").ShowAsync();
-                    return;
+                    MessageBox.Show("完了しました。", "実行結果", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch
             {
-                await new Windows.UI.Popups.MessageDialog("システムエラーが発生しました。", "例外").ShowAsync();
+                MessageBox.Show("システムエラーが発生しました。", "例外", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
         }
