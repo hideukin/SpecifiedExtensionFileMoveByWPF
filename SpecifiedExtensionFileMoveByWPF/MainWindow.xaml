@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SpecifiedExtensionFileMoveByWPF"
         mc:Ignorable="d"
         Title="SEFM" Height="600" Width="900
-        ">
+        " Closing="Window_Closing">
     <Grid AllowDrop="True">
         <Label x:Name="label" Content="フォルダ一覧" HorizontalAlignment="Left" Margin="50,20,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label1" Content="ピックアップファイル一覧" HorizontalAlignment="Left" Margin="500,20,0,0" VerticalAlignment="Top"/>
@@ -23,7 +23,8 @@
         <TextBox x:Name="SpecifiedTextBox" HorizontalAlignment="Left" Height="23" Margin="100,490,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" LostFocus="SpecifiedTextBox_LostFocus"/>
         <Label x:Name="label3" Content="保存先フォルダ" HorizontalAlignment="Left" Margin="500,400,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="DeleteFolderCheckBox" Content="元フォルダ削除" HorizontalAlignment="Left" Margin="500,490,0,0" VerticalAlignment="Top"/>
-        <CheckBox x:Name="CopyCheckBox" Content="コピー" HorizontalAlignment="Left" Margin="650,490,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="CopyCheckBox" Content="コピー" HorizontalAlignment="Left" Margin="610,490,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="OverWriteCheckBox" Content="強制上書き" HorizontalAlignment="Left" Margin="670,490,0,0" VerticalAlignment="Top"/>
         <Button x:Name="ExecButton" Content="実行" HorizontalAlignment="Left" Margin="780,490,0,0" VerticalAlignment="Top" Width="50" Click="ExecButton_Click"/>
         <Button x:Name="SelectButton" Content="選択" HorizontalAlignment="Left" Margin="780,430,0,0" VerticalAlignment="Top" Width="50" Click="SelectButton_Click"/>
         <TextBox x:Name="SavedFolderPathLabel" HorizontalAlignment="Left" Height="20" Margin="500,430,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250"/>
