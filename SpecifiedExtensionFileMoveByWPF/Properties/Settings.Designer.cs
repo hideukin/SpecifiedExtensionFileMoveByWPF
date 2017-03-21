@@ -178,5 +178,17 @@ namespace SpecifiedExtensionFileMoveByWPF.Properties {
                 this["OverWriteFlag"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ExcludingFilesList {
+            get {
+                return ((string)(this["ExcludingFilesList"]));
+            }
+            set {
+                this["ExcludingFilesList"] = value;
+            }
+        }
     }
 }
