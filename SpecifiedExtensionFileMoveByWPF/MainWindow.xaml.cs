@@ -378,5 +378,10 @@ namespace SpecifiedExtensionFileMoveByWPF
         {
             SaveSettings();
         }
+
+        private void ExcludingFileButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
