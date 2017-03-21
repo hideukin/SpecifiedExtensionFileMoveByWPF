@@ -10,7 +10,7 @@
     <Grid AllowDrop="True">
         <Label x:Name="label" Content="フォルダ一覧" HorizontalAlignment="Left" Margin="50,20,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label1" Content="ピックアップファイル一覧" HorizontalAlignment="Left" Margin="500,20,0,0" VerticalAlignment="Top"/>
-        <CheckBox x:Name="SubFolderCheckBox" Content="サブフォルダーも含めてピックアップする" HorizontalAlignment="Left" Margin="50,355,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
+        <CheckBox x:Name="SubFolderCheckBox" Content="サブフォルダーも含めてピックアップする" HorizontalAlignment="Left" Margin="50,360,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
         <Label x:Name="label2" Content="ピックアップ対象拡張子" HorizontalAlignment="Left" Margin="50,400,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="AviCheckBox" Content="avi" HorizontalAlignment="Left" Margin="50,430,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
         <CheckBox x:Name="MkvCheckBox" Content="mkv" HorizontalAlignment="Left" Margin="100,430,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
@@ -20,6 +20,7 @@
         <CheckBox x:Name="PngCheckBox" Content="png" HorizontalAlignment="Left" Margin="100,460,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
         <CheckBox x:Name="ZipCheckBox" Content="zip" HorizontalAlignment="Left" Margin="50,490
                   ,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
+        <Button x:Name="ExcludingFileButton" Content="除外ファイル設定" HorizontalAlignment="Left" Margin="730,360,0,0" VerticalAlignment="Top" Width="100" Click="ExcludingFileButton_Click"/>
         <TextBox x:Name="SpecifiedTextBox" HorizontalAlignment="Left" Height="23" Margin="100,490,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" LostFocus="SpecifiedTextBox_LostFocus"/>
         <Label x:Name="label3" Content="保存先フォルダ" HorizontalAlignment="Left" Margin="500,400,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="DeleteFolderCheckBox" Content="元フォルダ削除" HorizontalAlignment="Left" Margin="500,490,0,0" VerticalAlignment="Top"/>
