@@ -106,6 +106,12 @@ namespace SpecifiedExtensionFileMoveByWPF
             var fileList = new List<string>();
             List<string> patterns = GetPatternFromExtensions();
 
+            // 除外リストの取得
+            var excludingFileList = new List<string>();
+            var tempArray = Properties.Settings.Default.ExcludingFilesList.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            excludingFileList = (new List<string>(tempArray)).ConvertAll(delegate (string s) { return s.Trim(); });
+            //excludingFileList.AddRange(tempArray);
+
             // searchOption オプション [ AllDirectories…サブフォルダーも検索する / TopDirectoryOnly…直下のフォルダのみ検索する ]
             var searchOption = (bool)SubFolderCheckBox.IsChecked ? System.IO.SearchOption.AllDirectories : System.IO.SearchOption.TopDirectoryOnly;
 
@@ -119,7 +125,10 @@ namespace SpecifiedExtensionFileMoveByWPF
 
                     foreach (string filePath in filteringFile)
                     {
-                        fileList.Add(filePath);
+                        if (excludingFileList.Contains(Path.GetFileNameWithoutExtension(filePath)) == false)
+                        {
+                            fileList.Add(filePath);
+                        }
                     }
                 }
                 catch
@@ -381,7 +390,9 @@ namespace SpecifiedExtensionFileMoveByWPF
 
         private void ExcludingFileButton_Click(object sender, RoutedEventArgs e)
         {
-
+            ExcludingFilesSettings efs = new ExcludingFilesSettings();
+            efs.Owner = this;
+            efs.ShowDialog();
         }
     }
 }
