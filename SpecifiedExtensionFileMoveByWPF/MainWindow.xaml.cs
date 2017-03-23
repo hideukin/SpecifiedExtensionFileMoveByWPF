@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 //using System.Windows.Shapes;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.IO;
+using Microsoft.VisualBasic.FileIO;
 
 namespace SpecifiedExtensionFileMoveByWPF
 {
@@ -25,6 +26,9 @@ namespace SpecifiedExtensionFileMoveByWPF
         public MainWindow()
         {
             InitializeComponent();
+
+            // 設定値の反映
+            SetSettings();
         }
 
         /// <summary>
@@ -102,8 +106,14 @@ namespace SpecifiedExtensionFileMoveByWPF
             var fileList = new List<string>();
             List<string> patterns = GetPatternFromExtensions();
 
+            // 除外リストの取得
+            var excludingFileList = new List<string>();
+            var tempArray = Properties.Settings.Default.ExcludingFilesList.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            excludingFileList = (new List<string>(tempArray)).ConvertAll(delegate (string s) { return s.Trim(); });
+            //excludingFileList.AddRange(tempArray);
+
             // searchOption オプション [ AllDirectories…サブフォルダーも検索する / TopDirectoryOnly…直下のフォルダのみ検索する ]
-            var searchOption = (bool)SubFolderCheckBox.IsChecked ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            var searchOption = (bool)SubFolderCheckBox.IsChecked ? System.IO.SearchOption.AllDirectories : System.IO.SearchOption.TopDirectoryOnly;
 
             // フォルダを展開する
             foreach (string path in folderPaths)
@@ -115,7 +125,10 @@ namespace SpecifiedExtensionFileMoveByWPF
 
                     foreach (string filePath in filteringFile)
                     {
-                        fileList.Add(filePath);
+                        if (excludingFileList.Contains(Path.GetFileNameWithoutExtension(filePath)) == false)
+                        {
+                            fileList.Add(filePath);
+                        }
                     }
                 }
                 catch
@@ -243,22 +256,60 @@ namespace SpecifiedExtensionFileMoveByWPF
                     try
                     {
                         var copyMode = (bool)CopyCheckBox.IsChecked;
+                        var overWriteMode = (bool)OverWriteCheckBox.IsChecked;
                         foreach (object item in PickupListView.Items)
                         {
                             var targetPath = SavedFolderPathLabel.Text + "\\" + Path.GetFileName(item.ToString());
                             if (copyMode)
                             {
-                                File.Copy(item.ToString(), targetPath, true);
+                                if (overWriteMode)
+                                {
+                                    FileSystem.CopyFile(item.ToString(), targetPath, true);
+                                }
+                                else
+                                {
+                                    if (FileSystem.FileExists(item.ToString()))
+                                    {
+                                        if (MessageBox.Show(item.ToString() + "\nは保存先フォルダに同名のファイルが存在します。上書きしますか。", "上書き確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No)
+                                        {
+                                            MessageBox.Show("処理を中断しました。", "実行結果", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                            return;
+                                        }
+                                        else
+                                        {
+                                            FileSystem.CopyFile(item.ToString(), targetPath, true);
+                                        }
+                                    }
+
+                                }
                             }
                             else
                             {
-                                File.Move(item.ToString(), targetPath);
+                                if (overWriteMode)
+                                {
+                                    FileSystem.MoveFile(item.ToString(), targetPath, true);
+                                }
+                                else
+                                {
+                                    if (FileSystem.FileExists(item.ToString()))
+                                    {
+                                        if (MessageBox.Show(item.ToString() + "\nは保存先フォルダに同名のファイルが存在します。上書きしますか。", "上書き確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No)
+                                        {
+                                            MessageBox.Show("処理を中断しました。", "実行結果", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                            return;
+                                        }
+                                        else
+                                        {
+                                            FileSystem.MoveFile(item.ToString(), targetPath, true);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                     catch
                     {
-                        MessageBox.Show("ファイル移動に失敗しました。\n既にファイルが存在していないか、ファイルがロックされていないか確認してください。。", "例外", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("ファイル移動に失敗しました。\n既にファイルが存在していないか、ファイルがロックされていないか確認してください。", "例外", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
 
@@ -277,6 +328,7 @@ namespace SpecifiedExtensionFileMoveByWPF
                             return;
                         }
                     }
+                    SaveSettings();
                     MessageBox.Show("完了しました。", "実行結果", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
@@ -285,6 +337,62 @@ namespace SpecifiedExtensionFileMoveByWPF
                 MessageBox.Show("システムエラーが発生しました。", "例外", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+        }
+
+        /// <summary>
+        /// 設定値の反映
+        /// </summary>
+        private void SetSettings()
+        {
+            SavedFolderPathLabel.Text = Properties.Settings.Default.SavedFolderPath;
+            SubFolderCheckBox.IsChecked = Properties.Settings.Default.SubFolderFlag;
+            SubFolderCheckBox.IsChecked = Properties.Settings.Default.SubFolderFlag;
+            AviCheckBox.IsChecked = Properties.Settings.Default.AviFlag;
+            MkvCheckBox.IsChecked = Properties.Settings.Default.MkvFlag;
+            Mp4CheckBox.IsChecked = Properties.Settings.Default.Mp4Flag;
+            WmvCheckBox.IsChecked = Properties.Settings.Default.WmvFlag;
+            JpgCheckBox.IsChecked = Properties.Settings.Default.JpgFlag;
+            PngCheckBox.IsChecked = Properties.Settings.Default.PngFlag;
+            ZipCheckBox.IsChecked = Properties.Settings.Default.ZipFlag;
+            SpecifiedTextBox.Text = Properties.Settings.Default.SpecifiedList;
+            DeleteFolderCheckBox.IsChecked = Properties.Settings.Default.DeleteFolderFlag;
+            CopyCheckBox.IsChecked = Properties.Settings.Default.CopyFlag;
+            OverWriteCheckBox.IsChecked = Properties.Settings.Default.OverWriteFlag;
+        }
+
+        /// <summary>
+        /// 設定値の保存
+        /// </summary>
+        private void SaveSettings()
+        {
+            Properties.Settings.Default.SavedFolderPath = SavedFolderPathLabel.Text;
+            Properties.Settings.Default.SubFolderFlag = (bool)SubFolderCheckBox.IsChecked;
+            Properties.Settings.Default.SubFolderFlag = (bool)SubFolderCheckBox.IsChecked;
+            Properties.Settings.Default.AviFlag = (bool)AviCheckBox.IsChecked;
+            Properties.Settings.Default.MkvFlag = (bool)MkvCheckBox.IsChecked;
+            Properties.Settings.Default.Mp4Flag = (bool)Mp4CheckBox.IsChecked;
+            Properties.Settings.Default.WmvFlag = (bool)WmvCheckBox.IsChecked;
+            Properties.Settings.Default.JpgFlag = (bool)JpgCheckBox.IsChecked;
+            Properties.Settings.Default.PngFlag = (bool)PngCheckBox.IsChecked;
+            Properties.Settings.Default.ZipFlag = (bool)ZipCheckBox.IsChecked;
+            Properties.Settings.Default.SpecifiedList = SpecifiedTextBox.Text;
+            Properties.Settings.Default.DeleteFolderFlag = (bool)DeleteFolderCheckBox.IsChecked;
+            Properties.Settings.Default.CopyFlag = (bool)CopyCheckBox.IsChecked;
+            Properties.Settings.Default.OverWriteFlag = (bool)OverWriteCheckBox.IsChecked;
+            // 設定値の保存
+            Properties.Settings.Default.Save();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SaveSettings();
+        }
+
+        private void ExcludingFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            ExcludingFilesSettings efs = new ExcludingFilesSettings();
+            efs.Owner = this;
+            efs.ShowDialog();
         }
     }
 }
