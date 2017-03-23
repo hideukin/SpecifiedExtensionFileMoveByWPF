@@ -268,7 +268,7 @@ namespace SpecifiedExtensionFileMoveByWPF
                                 }
                                 else
                                 {
-                                    if (FileSystem.FileExists(item.ToString()))
+                                    if (FileSystem.FileExists(targetPath))
                                     {
                                         if (MessageBox.Show(item.ToString() + "\nは保存先フォルダに同名のファイルが存在します。上書きしますか。", "上書き確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No)
                                         {
@@ -291,7 +291,7 @@ namespace SpecifiedExtensionFileMoveByWPF
                                 }
                                 else
                                 {
-                                    if (FileSystem.FileExists(item.ToString()))
+                                    if (FileSystem.FileExists(targetPath))
                                     {
                                         if (MessageBox.Show(item.ToString() + "\nは保存先フォルダに同名のファイルが存在します。上書きしますか。", "上書き確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No)
                                         {
