@@ -270,17 +270,13 @@ namespace SpecifiedExtensionFileMoveByWPF
                                 {
                                     if (FileSystem.FileExists(targetPath))
                                     {
-                                        if (MessageBox.Show(item.ToString() + "\nは保存先フォルダに同名のファイルが存在します。上書きしますか。", "上書き確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No)
+                                        if (MessageBox.Show(item.ToString() + "\nは保存先フォルダに同名のファイルが存在します。上書きしますか。\n(すでにコピーされたファイルはコピー済みのままです。)", "上書き確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No)
                                         {
                                             MessageBox.Show("処理を中断しました。", "実行結果", MessageBoxButton.OK, MessageBoxImage.Warning);
                                             return;
                                         }
-                                        else
-                                        {
-                                            FileSystem.CopyFile(item.ToString(), targetPath, true);
-                                        }
                                     }
-
+                                    FileSystem.CopyFile(item.ToString(), targetPath, true);
                                 }
                             }
                             else
@@ -293,16 +289,13 @@ namespace SpecifiedExtensionFileMoveByWPF
                                 {
                                     if (FileSystem.FileExists(targetPath))
                                     {
-                                        if (MessageBox.Show(item.ToString() + "\nは保存先フォルダに同名のファイルが存在します。上書きしますか。", "上書き確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No)
+                                        if (MessageBox.Show(item.ToString() + "\nは保存先フォルダに同名のファイルが存在します。上書きしますか。\n(すでに移動されたファイルは移動済みのままです。)", "上書き確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No)
                                         {
                                             MessageBox.Show("処理を中断しました。", "実行結果", MessageBoxButton.OK, MessageBoxImage.Warning);
                                             return;
                                         }
-                                        else
-                                        {
-                                            FileSystem.MoveFile(item.ToString(), targetPath, true);
-                                        }
                                     }
+                                    FileSystem.MoveFile(item.ToString(), targetPath, true);
                                 }
                             }
                         }
@@ -393,6 +386,20 @@ namespace SpecifiedExtensionFileMoveByWPF
             ExcludingFilesSettings efs = new ExcludingFilesSettings();
             efs.Owner = this;
             efs.ShowDialog();
+        }
+
+        private void CopyCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            var copyMode = (bool)CopyCheckBox.IsChecked;
+            if (copyMode)
+            {
+                DeleteFolderCheckBox.IsChecked = false;
+                DeleteFolderCheckBox.IsEnabled = false;
+            }
+            else
+            {
+                DeleteFolderCheckBox.IsEnabled = true;
+            }
         }
     }
 }
