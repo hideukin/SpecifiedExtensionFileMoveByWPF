@@ -190,5 +190,17 @@ namespace SpecifiedExtensionFileMoveByWPF.Properties {
                 this["ExcludingFilesList"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsoFlag {
+            get {
+                return ((bool)(this["IsoFlag"]));
+            }
+            set {
+                this["IsoFlag"] = value;
+            }
+        }
     }
 }
