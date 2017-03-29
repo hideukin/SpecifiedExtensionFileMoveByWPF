@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SpecifiedExtensionFileMoveByWPF"
         mc:Ignorable="d"
         Title="SEFM" Height="600" Width="900
-        " Closing="Window_Closing">
+        " Closing="Window_Closing" Icon="optiicon.ico" ResizeMode="CanMinimize">
     <Grid AllowDrop="True">
         <Label x:Name="label" Content="フォルダ一覧" HorizontalAlignment="Left" Margin="50,20,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label1" Content="ピックアップファイル一覧" HorizontalAlignment="Left" Margin="500,20,0,0" VerticalAlignment="Top"/>
@@ -16,6 +16,7 @@
         <CheckBox x:Name="MkvCheckBox" Content="mkv" HorizontalAlignment="Left" Margin="100,430,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
         <CheckBox x:Name="Mp4CheckBox" Content="mp4" HorizontalAlignment="Left" Margin="150,430,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
         <CheckBox x:Name="WmvCheckBox" Content="wmv" HorizontalAlignment="Left" Margin="200,430,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
+        <CheckBox x:Name="IsoCheckBox" Content="iso" HorizontalAlignment="Left" Margin="250,430,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
         <CheckBox x:Name="JpgCheckBox" Content="jpg" HorizontalAlignment="Left" Margin="50,460,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
         <CheckBox x:Name="PngCheckBox" Content="png" HorizontalAlignment="Left" Margin="100,460,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
         <CheckBox x:Name="ZipCheckBox" Content="zip" HorizontalAlignment="Left" Margin="50,490
