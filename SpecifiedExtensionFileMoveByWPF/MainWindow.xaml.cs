@@ -152,7 +152,7 @@ namespace SpecifiedExtensionFileMoveByWPF
             List<string> patterns = new List<string>();
 
             // 拡張子チェックボックスの格納
-            CheckBox[] extensionCheckBoxes = { AviCheckBox, MkvCheckBox, Mp4CheckBox, WmvCheckBox, JpgCheckBox, PngCheckBox, ZipCheckBox };
+            CheckBox[] extensionCheckBoxes = { AviCheckBox, MkvCheckBox, Mp4CheckBox, WmvCheckBox, IsoCheckBox, JpgCheckBox, PngCheckBox, ZipCheckBox };
 
             var pattern = string.Empty;
             foreach (CheckBox checkBox in extensionCheckBoxes)
@@ -344,6 +344,7 @@ namespace SpecifiedExtensionFileMoveByWPF
             MkvCheckBox.IsChecked = Properties.Settings.Default.MkvFlag;
             Mp4CheckBox.IsChecked = Properties.Settings.Default.Mp4Flag;
             WmvCheckBox.IsChecked = Properties.Settings.Default.WmvFlag;
+            IsoCheckBox.IsChecked = Properties.Settings.Default.IsoFlag;
             JpgCheckBox.IsChecked = Properties.Settings.Default.JpgFlag;
             PngCheckBox.IsChecked = Properties.Settings.Default.PngFlag;
             ZipCheckBox.IsChecked = Properties.Settings.Default.ZipFlag;
@@ -365,6 +366,7 @@ namespace SpecifiedExtensionFileMoveByWPF
             Properties.Settings.Default.MkvFlag = (bool)MkvCheckBox.IsChecked;
             Properties.Settings.Default.Mp4Flag = (bool)Mp4CheckBox.IsChecked;
             Properties.Settings.Default.WmvFlag = (bool)WmvCheckBox.IsChecked;
+            Properties.Settings.Default.IsoFlag = (bool)IsoCheckBox.IsChecked;
             Properties.Settings.Default.JpgFlag = (bool)JpgCheckBox.IsChecked;
             Properties.Settings.Default.PngFlag = (bool)PngCheckBox.IsChecked;
             Properties.Settings.Default.ZipFlag = (bool)ZipCheckBox.IsChecked;
