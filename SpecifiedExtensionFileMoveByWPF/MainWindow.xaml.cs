@@ -1,20 +1,12 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Collections.Generic;
+
+//using System.Windows.Shapes;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-//using System.Windows.Shapes;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.IO;
-using Microsoft.VisualBasic.FileIO;
 
 namespace SpecifiedExtensionFileMoveByWPF
 {
@@ -246,84 +238,68 @@ namespace SpecifiedExtensionFileMoveByWPF
 
             try
             {
-                // 確認ダイアログ
-                if (MessageBox.Show("処理を継続します。", "継続確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No)
+                try
                 {
-                    return;
-                }
-                else
-                {
-                    try
+                    var copyMode = (bool)CopyCheckBox.IsChecked;
+                    var overWriteMode = (bool)OverWriteCheckBox.IsChecked;
+                    foreach (object item in PickupListView.Items)
                     {
-                        var copyMode = (bool)CopyCheckBox.IsChecked;
-                        var overWriteMode = (bool)OverWriteCheckBox.IsChecked;
-                        foreach (object item in PickupListView.Items)
+                        var targetPath = SavedFolderPathLabel.Text + "\\" + Path.GetFileName(item.ToString());
+                        if (copyMode)
                         {
-                            var targetPath = SavedFolderPathLabel.Text + "\\" + Path.GetFileName(item.ToString());
-                            if (copyMode)
+                            if (overWriteMode)
                             {
-                                if (overWriteMode)
-                                {
-                                    FileSystem.CopyFile(item.ToString(), targetPath, true);
-                                }
-                                else
-                                {
-                                    if (FileSystem.FileExists(targetPath))
-                                    {
-                                        if (MessageBox.Show(item.ToString() + "\nは保存先フォルダに同名のファイルが存在します。上書きしますか。\n(すでにコピーされたファイルはコピー済みのままです。)", "上書き確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No)
-                                        {
-                                            MessageBox.Show("処理を中断しました。", "実行結果", MessageBoxButton.OK, MessageBoxImage.Warning);
-                                            return;
-                                        }
-                                    }
-                                    FileSystem.CopyFile(item.ToString(), targetPath, true);
-                                }
+                                FileSystem.CopyFile(item.ToString(), targetPath, true);
                             }
                             else
                             {
-                                if (overWriteMode)
-                                {
-                                    FileSystem.MoveFile(item.ToString(), targetPath, true);
-                                }
-                                else
-                                {
-                                    if (FileSystem.FileExists(targetPath))
-                                    {
-                                        if (MessageBox.Show(item.ToString() + "\nは保存先フォルダに同名のファイルが存在します。上書きしますか。\n(すでに移動されたファイルは移動済みのままです。)", "上書き確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No)
-                                        {
-                                            MessageBox.Show("処理を中断しました。", "実行結果", MessageBoxButton.OK, MessageBoxImage.Warning);
-                                            return;
-                                        }
-                                    }
-                                    FileSystem.MoveFile(item.ToString(), targetPath, true);
-                                }
+                                FileSystem.CopyFile(item.ToString(), targetPath, UIOption.AllDialogs);
+                            }
+                        }
+                        else
+                        {
+                            if (overWriteMode)
+                            {
+                                FileSystem.MoveFile(item.ToString(), targetPath, true);
+                            }
+                            else
+                            {
+                                FileSystem.MoveFile(item.ToString(), targetPath, UIOption.AllDialogs);
                             }
                         }
                     }
-                    catch
-                    {
-                        MessageBox.Show("ファイル移動に失敗しました。\n既にファイルが存在していないか、ファイルがロックされていないか確認してください。", "例外", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
-                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("例外が発生しました。\n" + ex.Message, "例外", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
-                    if ((bool)DeleteFolderCheckBox.IsChecked)
+                if ((bool)DeleteFolderCheckBox.IsChecked)
+                {
+                    try
                     {
-                        try
+                        // 確認ダイアログ
+                        if (MessageBox.Show("ファイル操作は完了しました。\n元フォルダを削除します。本当によろしいですか。", "継続確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No)
+                        {
+                            return;
+                        }
+                        else
                         {
                             foreach (object item in FoldersListView.Items)
                             {
                                 Directory.Delete(item.ToString(), true);
                             }
                         }
-                        catch
-                        {
-                            MessageBox.Show("フォルダ削除に失敗しました。\nファイルがロックされていないか確認してください。", "例外", MessageBoxButton.OK, MessageBoxImage.Error);
-                            return;
-                        }
                     }
-                    SaveSettings();
-                    MessageBox.Show("完了しました。", "実行結果", MessageBoxButton.OK, MessageBoxImage.Information);
+                    catch
+                    {
+                        MessageBox.Show("フォルダ削除に失敗しました。\nファイルがロックされていないか確認してください。", "例外", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
                 }
+                SaveSettings();
+                MessageBox.Show("完了しました。", "実行結果", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch
             {
@@ -352,6 +328,7 @@ namespace SpecifiedExtensionFileMoveByWPF
             DeleteFolderCheckBox.IsChecked = Properties.Settings.Default.DeleteFolderFlag;
             CopyCheckBox.IsChecked = Properties.Settings.Default.CopyFlag;
             OverWriteCheckBox.IsChecked = Properties.Settings.Default.OverWriteFlag;
+            CheckCopyCheckBoxStatus();
         }
 
         /// <summary>
@@ -391,6 +368,11 @@ namespace SpecifiedExtensionFileMoveByWPF
         }
 
         private void CopyCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            CheckCopyCheckBoxStatus();
+        }
+
+        private void CheckCopyCheckBoxStatus()
         {
             var copyMode = (bool)CopyCheckBox.IsChecked;
             if (copyMode)
