@@ -23,6 +23,44 @@ namespace SpecifiedExtensionFileMoveByWPF
             SetSettings();
         }
 
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            LoadWindowPlacement();
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            if (!e.Cancel)
+            {
+                SaveWindowPlacement();
+            }
+        }
+
+        void LoadWindowPlacement()
+        {
+            Properties.Settings.Default.Reload();
+
+            var bounds = Properties.Settings.Default.Bounds;
+            Left = bounds.Left;
+            Top = bounds.Top;
+            Width = bounds.Width;
+            Height = bounds.Height;
+
+            WindowState = Properties.Settings.Default.WindowState;
+        }
+
+        void SaveWindowPlacement()
+        {
+            Properties.Settings.Default.WindowState = WindowState == WindowState.Minimized ? WindowState.Normal : WindowState; // 最小化は保存しない
+            Properties.Settings.Default.Bounds = RestoreBounds;
+
+            Properties.Settings.Default.Save();
+        }
+
         /// <summary>
         /// 選択ボタンによるフォルダ選択および画面表示
         /// </summary>
@@ -72,17 +110,18 @@ namespace SpecifiedExtensionFileMoveByWPF
         /// <param name="e">イベントルーティング情報</param>
         private void FoldersListView_Drop(object sender, DragEventArgs e)
         {
-            var folderPaths = new List<string>();
+            var folderPaths = (List<string>)FoldersListView.ItemsSource ?? new List<string>();
             string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (files != null)
             {
                 foreach (var s in files)
-                    if (Directory.Exists(s))
+                    if (Directory.Exists(s) && !folderPaths.Contains(s))
                     {
                         folderPaths.Add(s);
                     }
             }
             FoldersListView.ItemsSource = folderPaths;
+            FoldersListView.Items.Refresh();
             SetPickupListView(folderPaths);
         }
 
@@ -300,6 +339,8 @@ namespace SpecifiedExtensionFileMoveByWPF
                 }
                 SaveSettings();
                 MessageBox.Show("完了しました。", "実行結果", MessageBoxButton.OK, MessageBoxImage.Information);
+                FoldersListView.ItemsSource = null;
+                PickupListView.ItemsSource = null;
             }
             catch
             {
@@ -351,6 +392,7 @@ namespace SpecifiedExtensionFileMoveByWPF
             Properties.Settings.Default.DeleteFolderFlag = (bool)DeleteFolderCheckBox.IsChecked;
             Properties.Settings.Default.CopyFlag = (bool)CopyCheckBox.IsChecked;
             Properties.Settings.Default.OverWriteFlag = (bool)OverWriteCheckBox.IsChecked;
+            
             // 設定値の保存
             Properties.Settings.Default.Save();
         }
@@ -384,6 +426,12 @@ namespace SpecifiedExtensionFileMoveByWPF
             {
                 DeleteFolderCheckBox.IsEnabled = true;
             }
+        }
+
+        private void Clear_Click(object sender, RoutedEventArgs e)
+        {
+            FoldersListView.ItemsSource = null;
+            PickupListView.ItemsSource = null;
         }
     }
 }

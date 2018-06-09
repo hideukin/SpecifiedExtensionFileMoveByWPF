@@ -202,5 +202,29 @@ namespace SpecifiedExtensionFileMoveByWPF.Properties {
                 this["IsoFlag"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public global::System.Windows.WindowState WindowState {
+            get {
+                return ((global::System.Windows.WindowState)(this["WindowState"]));
+            }
+            set {
+                this["WindowState"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10,10,900,600")]
+        public global::System.Windows.Rect Bounds {
+            get {
+                return ((global::System.Windows.Rect)(this["Bounds"]));
+            }
+            set {
+                this["Bounds"] = value;
+            }
+        }
     }
 }

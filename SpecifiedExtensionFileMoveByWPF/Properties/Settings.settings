@@ -47,5 +47,11 @@
     <Setting Name="IsoFlag" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="WindowState" Type="System.Windows.WindowState" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
+    </Setting>
+    <Setting Name="Bounds" Type="System.Windows.Rect" Scope="User">
+      <Value Profile="(Default)">10,10,900,600</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -21,14 +21,14 @@
         <CheckBox x:Name="PngCheckBox" Content="png" HorizontalAlignment="Left" Margin="100,460,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
         <CheckBox x:Name="ZipCheckBox" Content="zip" HorizontalAlignment="Left" Margin="50,490
                   ,0,0" VerticalAlignment="Top" Click="ExtensionCheckBoxes_Click"/>
-        <Button x:Name="ExcludingFileButton" Content="除外ファイル設定" HorizontalAlignment="Left" Margin="730,360,0,0" VerticalAlignment="Top" Width="100" Click="ExcludingFileButton_Click"/>
-        <TextBox x:Name="SpecifiedTextBox" HorizontalAlignment="Left" Height="23" Margin="100,490,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" LostFocus="SpecifiedTextBox_LostFocus"/>
+        <Button x:Name="ExcludingFileButton" Content="除外ファイル設定" HorizontalAlignment="Left" Margin="750,360,0,0" VerticalAlignment="Top" Width="100" Click="ExcludingFileButton_Click"/>
+        <TextBox x:Name="SpecifiedTextBox" HorizontalAlignment="Left" Height="23" Margin="100,487,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250" LostFocus="SpecifiedTextBox_LostFocus"/>
         <Label x:Name="label3" Content="保存先フォルダ" HorizontalAlignment="Left" Margin="500,400,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="DeleteFolderCheckBox" Content="元フォルダ削除" HorizontalAlignment="Left" Margin="500,490,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="CopyCheckBox" Content="コピー" HorizontalAlignment="Left" Margin="610,490,0,0" VerticalAlignment="Top" Click="CopyCheckBox_Click"/>
         <CheckBox x:Name="OverWriteCheckBox" Content="強制上書き" HorizontalAlignment="Left" Margin="670,490,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="ExecButton" Content="実行" HorizontalAlignment="Left" Margin="780,490,0,0" VerticalAlignment="Top" Width="50" Click="ExecButton_Click"/>
-        <Button x:Name="SelectButton" Content="選択" HorizontalAlignment="Left" Margin="780,430,0,0" VerticalAlignment="Top" Width="50" Click="SelectButton_Click"/>
+        <Button x:Name="ExecButton" Content="実行" HorizontalAlignment="Left" Margin="800,487,0,0" VerticalAlignment="Top" Width="50" Click="ExecButton_Click"/>
+        <Button x:Name="SelectButton" Content="選択" HorizontalAlignment="Left" Margin="800,430,0,0" VerticalAlignment="Top" Width="50" Click="SelectButton_Click"/>
         <TextBox x:Name="SavedFolderPathLabel" HorizontalAlignment="Left" Height="20" Margin="500,430,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250"/>
         <ListView x:Name="FoldersListView" HorizontalAlignment="Left" Height="300" Margin="50,50,0,0" VerticalAlignment="Top" Width="350" Drop="FoldersListView_Drop" PreviewDragOver="FoldersListView_PreviewDragOver">
             <ListView.View>
@@ -44,6 +44,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <Button x:Name="Clear" Content="クリア" HorizontalAlignment="Left" Margin="325,360,0,0" VerticalAlignment="Top" Width="75" Click="Clear_Click"/>
 
     </Grid>
 </Window>
