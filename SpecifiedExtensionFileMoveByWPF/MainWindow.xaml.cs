@@ -410,6 +410,8 @@ namespace SpecifiedExtensionFileMoveByWPF
             ExcludingFilesSettings efs = new ExcludingFilesSettings();
             efs.Owner = this;
             efs.ShowDialog();
+
+            SetPickupListView((List<string>)FoldersListView.ItemsSource);
         }
 
         private void CopyCheckBox_Click(object sender, RoutedEventArgs e)
@@ -431,6 +433,11 @@ namespace SpecifiedExtensionFileMoveByWPF
             }
         }
 
+        /// <summary>
+        /// クリアボタンクリック
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
             FoldersListView.ItemsSource = null;
