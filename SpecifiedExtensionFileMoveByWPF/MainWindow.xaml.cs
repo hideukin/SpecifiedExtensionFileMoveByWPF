@@ -156,7 +156,10 @@ namespace SpecifiedExtensionFileMoveByWPF
 
                     foreach (string filePath in filteringFile)
                     {
-                        if (excludingFileList.Contains(Path.GetFileNameWithoutExtension(filePath)) == false)
+                        var targetFileName = Path.GetFileNameWithoutExtension(filePath);
+                        var isContains = excludingFileList.Any(excludingFile => targetFileName.Contains(excludingFile));
+
+                        if (!isContains)
                         {
                             fileList.Add(filePath);
                         }
