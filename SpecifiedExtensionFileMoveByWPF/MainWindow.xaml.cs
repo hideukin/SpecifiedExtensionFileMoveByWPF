@@ -156,7 +156,10 @@ namespace SpecifiedExtensionFileMoveByWPF
 
                     foreach (string filePath in filteringFile)
                     {
-                        if (excludingFileList.Contains(Path.GetFileNameWithoutExtension(filePath)) == false)
+                        var targetFileName = Path.GetFileNameWithoutExtension(filePath);
+                        var isContains = excludingFileList.Any(excludingFile => targetFileName.Contains(excludingFile));
+
+                        if (!isContains)
                         {
                             fileList.Add(filePath);
                         }
@@ -409,6 +412,8 @@ namespace SpecifiedExtensionFileMoveByWPF
             ExcludingFilesSettings efs = new ExcludingFilesSettings();
             efs.Owner = this;
             efs.ShowDialog();
+
+            SetPickupListView((List<string>)FoldersListView.ItemsSource);
         }
 
         private void CopyCheckBox_Click(object sender, RoutedEventArgs e)
@@ -430,6 +435,11 @@ namespace SpecifiedExtensionFileMoveByWPF
             }
         }
 
+        /// <summary>
+        /// クリアボタンクリック
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
             FoldersListView.ItemsSource = null;

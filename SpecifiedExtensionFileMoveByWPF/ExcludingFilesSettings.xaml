@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="ExcludingFilesSettings" Height="520" Width="410" ResizeMode="NoResize">
     <Grid>
-        <TextBox x:Name="ExcludingFilesTextBox" HorizontalAlignment="Left" Height="350" AcceptsReturn="True" TextWrapping="Wrap" VerticalAlignment="Top" Width="350" Margin="20,80,0,0"/>
+        <TextBox x:Name="ExcludingFilesTextBox" HorizontalAlignment="Left" Height="322" AcceptsReturn="True" TextWrapping="Wrap" VerticalAlignment="Top" Width="350" Margin="20,108,0,0"/>
         <Label x:Name="label" Content="ピックアップファイルの除外対象ファイル&#xA;" HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Width="200" Height="31" FontWeight="Bold"/>
-        <Label x:Name="label1" Content="除外したいファイルのファイル名(拡張子なし)を入力してください&#xA;改行で複数設定可能です&#xD;&#xA;例) sample.jpg を除外したい場合 → sample" HorizontalAlignment="Left" Margin="20,30,0,0" VerticalAlignment="Top" Width="350" Height="50" FontSize="10"/>
+        <Label x:Name="label1" Content="除外したいファイルのファイル名(拡張子なし)を入力してください&#xD;&#xA;部分一致です&#xA;改行で複数設定可能です&#xA;例1) sample.jpg を除外したい場合 → sample&#xD;&#xA;例2) example1, example2, sample を除外したい場合 → ample" HorizontalAlignment="Left" Margin="20,30,0,0" VerticalAlignment="Top" Width="350" Height="78" FontSize="10"/>
         <Button x:Name="SaveButton" Content="保存" HorizontalAlignment="Left" Margin="320,440,0,0" VerticalAlignment="Top" Width="50" Click="SaveButton_Click"/>
     </Grid>
 </Window>
