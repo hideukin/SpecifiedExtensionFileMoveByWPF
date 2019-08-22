@@ -53,5 +53,8 @@
     <Setting Name="Bounds" Type="System.Windows.Rect" Scope="User">
       <Value Profile="(Default)">10,10,900,600</Value>
     </Setting>
+    <Setting Name="NoDialogFlag" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

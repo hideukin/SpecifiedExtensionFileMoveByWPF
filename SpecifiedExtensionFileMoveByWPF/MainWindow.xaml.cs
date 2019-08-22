@@ -319,16 +319,13 @@ namespace SpecifiedExtensionFileMoveByWPF
                     try
                     {
                         // 確認ダイアログ
-                        if (MessageBox.Show("ファイル操作は完了しました。\n元フォルダを削除します。本当によろしいですか。", "継続確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No)
-                        {
-                            return;
+                        if (!(bool)NoDialogCheckBox.IsChecked) {
+                            if (MessageBox.Show("ファイル操作は完了しました。\n元フォルダを削除します。本当によろしいですか。", "継続確認", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.No) return;
                         }
-                        else
+
+                        foreach (object item in FoldersListView.Items)
                         {
-                            foreach (object item in FoldersListView.Items)
-                            {
-                                Directory.Delete(item.ToString(), true);
-                            }
+                            Directory.Delete(item.ToString(), true);
                         }
                     }
                     catch
@@ -338,7 +335,10 @@ namespace SpecifiedExtensionFileMoveByWPF
                     }
                 }
                 SaveSettings();
-                MessageBox.Show("完了しました。", "実行結果", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (!(bool)NoDialogCheckBox.IsChecked)
+                {
+                    MessageBox.Show("完了しました。", "実行結果", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
                 FoldersListView.ItemsSource = null;
                 PickupListView.ItemsSource = null;
             }
@@ -367,6 +367,7 @@ namespace SpecifiedExtensionFileMoveByWPF
             ZipCheckBox.IsChecked = Properties.Settings.Default.ZipFlag;
             SpecifiedTextBox.Text = Properties.Settings.Default.SpecifiedList;
             DeleteFolderCheckBox.IsChecked = Properties.Settings.Default.DeleteFolderFlag;
+            NoDialogCheckBox.IsChecked = Properties.Settings.Default.NoDialogFlag;
             CopyCheckBox.IsChecked = Properties.Settings.Default.CopyFlag;
             OverWriteCheckBox.IsChecked = Properties.Settings.Default.OverWriteFlag;
             CheckCopyCheckBoxStatus();
@@ -390,6 +391,7 @@ namespace SpecifiedExtensionFileMoveByWPF
             Properties.Settings.Default.ZipFlag = (bool)ZipCheckBox.IsChecked;
             Properties.Settings.Default.SpecifiedList = SpecifiedTextBox.Text;
             Properties.Settings.Default.DeleteFolderFlag = (bool)DeleteFolderCheckBox.IsChecked;
+            Properties.Settings.Default.NoDialogFlag = (bool)NoDialogCheckBox.IsChecked;
             Properties.Settings.Default.CopyFlag = (bool)CopyCheckBox.IsChecked;
             Properties.Settings.Default.OverWriteFlag = (bool)OverWriteCheckBox.IsChecked;
             
