@@ -21,6 +21,12 @@ namespace SpecifiedExtensionFileMoveByWPF
 
             // 設定値の反映
             SetSettings();
+            ClearMassageLabel();
+        }
+
+        private void ClearMassageLabel()
+        {
+            MassageLabel.Content = "";
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -131,6 +137,8 @@ namespace SpecifiedExtensionFileMoveByWPF
         /// <param name="folderPaths">フォルダパスリスト</param>
         private void SetPickupListView(List<string> folderPaths)
         {
+            ClearMassageLabel();
+
             // フォルダパスリストが存在するかチェック
             if (folderPaths == null) { return; }
 
@@ -341,6 +349,10 @@ namespace SpecifiedExtensionFileMoveByWPF
                 if (!(bool)NoDialogCheckBox.IsChecked)
                 {
                     MessageBox.Show("完了しました。", "実行結果", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MassageLabel.Content = "完了しました";
                 }
                 FoldersListView.ItemsSource = null;
                 PickupListView.ItemsSource = null;
